@@ -9,6 +9,5 @@ void main() async {
 
   /// Initializing [kSharedPreferences]
   kSharedPreferences = await SharedPreferences.getInstance();
-
   runApp(const MyApp());
 }

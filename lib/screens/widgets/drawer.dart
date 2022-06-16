@@ -7,8 +7,10 @@ import 'package:flutter_screenutil/src/size_extension.dart';
 import 'package:textile/config/router/router.dart';
 import 'package:textile/constants/app_constants.dart';
 import 'package:textile/screens/auth/sign_in.dart';
+import 'package:textile/screens/gallary.dart';
 import 'package:textile/screens/home/Orders.dart';
 import 'package:textile/screens/home/homepage.dart';
+import 'package:textile/screens/notes.dart';
 import 'package:textile/screens/payment_detail_page/total_payment_detail_page.dart';
 import 'package:textile/screens/profile.dart';
 import 'package:textile/screens/widgets/webview.dart';
@@ -65,7 +67,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
 
             },
           ),
-          Divider(thickness: 1.0,),
+          const Divider(thickness: 1.0,),
           ListTile(
             leading: const Icon(Icons.shopping_bag),
             title: Text(
@@ -76,7 +78,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               Navigator.push(context, CupertinoPageRoute(builder: (context) => const Orders()));
             },
           ),
-          Divider(thickness: 1.0,),
+          const Divider(thickness: 1.0,),
           ListTile(
             leading: const Icon(Icons.person),
             title: Text(
@@ -87,7 +89,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               Navigator.push(context, CupertinoPageRoute(builder: (context) => const ProfilePage()));
             },
           ),
-          Divider(thickness: 1.0,),
+          const Divider(thickness: 1.0,),
           ExpansionTile(
               title: Row(
                 children: const [
@@ -98,8 +100,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
               children: [
                 ListTile(
-
-                title: Text("Create Order",
+                  title: Text("Create Order",
                     style: TextStyle(color: Palette.blackColor.shade500)),
                 onTap: () {
                   Navigator.pop(context, true);
@@ -116,7 +117,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
               ]
           ),
-          Divider(thickness: 1.0,),
+          const Divider(thickness: 1.0,),
           ListTile(
             leading: const Icon(Icons.payment),
             title: Text("Payment",
@@ -126,7 +127,28 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               Navigate.to(const PaymentDetailPage());
             },
           ),
-          Divider(thickness: 1.0,),
+          const Divider(thickness: 1.0,),
+          ListTile(
+            leading: const Icon(Icons.photo),
+            title: Text("Gallery",
+                style: TextStyle(color: Palette.blackColor.shade500)),
+            onTap: () {
+              Navigator.pop(context,true);
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => const GalleryPage()));
+
+            },
+          ),
+          const Divider(thickness: 1.0,),
+          ListTile(
+            leading: const Icon(Icons.note),
+            title: Text("Notes",
+                style: TextStyle(color: Palette.blackColor.shade500)),
+            onTap: () {
+              Navigator.push(context,
+                  CupertinoPageRoute(builder: (context) => const NotesPage()));
+            },
+          ),
+          const Divider(thickness: 1.0,),
           ExpansionTile(
             title: const Text('Setting'),
             children: [ListTile(
@@ -139,7 +161,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               },
             ),]
           ),
-          Divider(thickness: 1.0,),
+          const Divider(thickness: 1.0,),
           ExpansionTile(
             title: const Text('Manage'),
             children: _menu.map((menu) {
@@ -170,7 +192,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               }
             }).toList(),
           ),
-          Divider(thickness: 1.0,),
+          const Divider(thickness: 1.0,),
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text("Logout",
@@ -180,6 +202,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   CupertinoPageRoute(builder: (context) => const SignIn()));
             },
           ),
+          const Divider(thickness: 1.0,),
         ],
       ),
     );

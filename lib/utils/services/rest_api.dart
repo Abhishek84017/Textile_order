@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:textile/constants/api_path.dart';
+import 'package:textile/constants/app_constants.dart';
 import 'package:textile/models/models.dart';
 import 'package:http/http.dart' as http;
 import 'package:textile/models/payment_detail_model.dart';
@@ -15,6 +16,9 @@ class Services {
   /// error while requesting for any of api
   static const String _errorMessage = 'Something went wrong, please try later';
   static const String _noInternetConnection = 'No internet connection';
+
+
+
 
   // static Map<String, String> restApiHeaders = <String, String>{
   //   'Content-Type': 'application/json',
@@ -174,6 +178,7 @@ class Services {
     try {
       http.Response response = await _client.get(url, headers: _restApiHeaders);
       final jsonResponse = jsonDecode(response.body);
+      kSharedPreferences.setString('totalvalue', jsonResponse['pending']);
       if (response.statusCode == HttpStatus.ok) {
         final payments = <PaymentDetailModel>[];
         if (jsonResponse['data'] != null) {

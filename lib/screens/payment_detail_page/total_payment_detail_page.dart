@@ -48,144 +48,153 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
             AppAssets.loginBackground,
             fit: BoxFit.fill,
           ),
-          FutureBuilder<Data<List<PaymentDetailModel>>>(
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const AppProgressIndicator(
-                    color: Palette.primaryColor);
-              }
-              if (snapshot.hasData &&
-                  snapshot.data!.statusCode == 200 &&
-                  snapshot.data!.data!.isNotEmpty) {
-                return ListView.builder(
-                    itemCount: snapshot.data!.data!.length,
-                    itemBuilder: (context, index) {
-                      final order = snapshot.data!.data![index];
-                      return Padding(
-                        padding: EdgeInsets.all(20.w),
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (_) => PaymentDetailPageById(id: order.id,partyName: order.name,))),
-                          child: Card(
-                            margin: EdgeInsets.symmetric(horizontal: 10.w),
-                            elevation: 10,
-                            shadowColor: Palette.primaryColor.shade50,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      '${order.name}',
-                                      style: TextStyle(fontSize: 18.sp),
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Text('Total Outstanding: ${kSharedPreferences.getString('totalvalue').toString()}',style: const TextStyle(fontSize:18,color: Colors.red),),
+                FutureBuilder<Data<List<PaymentDetailModel>>>(
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const AppProgressIndicator(
+                          color: Palette.primaryColor);
+                    }
+                    if (snapshot.hasData &&
+                        snapshot.data!.statusCode == 200 &&
+                        snapshot.data!.data!.isNotEmpty) {
+                      return ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.data!.length,
+                          itemBuilder: (context, index) {
+                            final order = snapshot.data!.data![index];
+                            return Padding(
+                              padding: EdgeInsets.all(20.w),
+                              child: GestureDetector(
+                                onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (_) => PaymentDetailPageById(id: order.id,partyName: order.name,))),
+                                child: Card(
+                                  margin: EdgeInsets.symmetric(horizontal: 10.w),
+                                  elevation: 10,
+                                  shadowColor: Palette.primaryColor.shade50,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Column(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '${order.name}',
+                                            style: TextStyle(fontSize: 18.sp),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 7.w,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text('Bill Amount'),
+                                            Text('${order.billAmount}'),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 7.w,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text('Pending Amount'),
+                                            Text('${order.pending}')
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 7.w,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text('received'),
+                                            Text('${order.received}')
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 7.w,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text('Last Update Date'),
+                                            Text(DateFormat("dd-MM-yyyy hh:mm a")
+                                                .format(DateTime.tryParse(
+                                                        "${order.modified}") ??
+                                                    DateTime.now())),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 20.w,
+                                        ),
+                                        Row(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                await showCupertinoDialog(
+                                                    context: context,
+                                                    builder: (context) => AlertDialog(
+                                                      title: const Text('Going To Pick The Payment'),
+                                                      actions: [
+                                                        TextButton(
+                                                          child:
+                                                          const Text('Yes'),
+                                                          onPressed: (){
+                                                            _paymentPick(order);
+                                                            Navigator.pop(context,true);
+                                                            setState(() {});
+                                                          },
+                                                        ),
+                                                        TextButton(
+                                                          child: const Text('No'),
+                                                          onPressed: () =>
+                                                              Navigator.pop(
+                                                                  context, false),
+                                                        ),
+                                                      ],
+                                                    ));
+                                              },
+                                              child: order.assigned == 'y' ? GestureDetector(onTap: (){Utils.showToast('Payment is assigned to someone please choose another payment');},child:  Text('Going To Pick',
+                                                  style: TextStyle(
+                                                      color:
+                                                      Palette.primaryColor.shade900))) : Text(
+                                                'Going To Pick',
+                                                style: TextStyle(
+                                                    color:
+                                                    Palette.primaryColor.shade900),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(
-                                    height: 7.w,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text('Bill Amount'),
-                                      Text('${order.billAmount}'),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 7.w,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text('Pending Amount'),
-                                      Text('${order.pending}')
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 7.w,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text('received'),
-                                      Text('${order.received}')
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 7.w,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text('Last Update Date'),
-                                      Text(DateFormat("dd-MM-yyyy hh:mm a")
-                                          .format(DateTime.tryParse(
-                                                  "${order.modified}") ??
-                                              DateTime.now())),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 20.w,
-                                  ),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () async {
-                                          await showCupertinoDialog(
-                                              context: context,
-                                              builder: (context) => AlertDialog(
-                                                title: const Text('Going To Pick The Payment'),
-                                                actions: [
-                                                  TextButton(
-                                                    child:
-                                                    const Text('Yes'),
-                                                    onPressed: (){
-                                                      _paymentPick(order);
-                                                      Navigator.pop(context,true);
-                                                      setState(() {});
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    child: const Text('No'),
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            context, false),
-                                                  ),
-                                                ],
-                                              ));
-                                        },
-                                        child: order.assigned == 'y' ? GestureDetector(onTap: (){Utils.showToast('Payment is assigned to someone please choose another payment');},child:  Text('Going To Pick',
-                                            style: TextStyle(
-                                                color:
-                                                Palette.primaryColor.shade900))) : Text(
-                                          'Going To Pick',
-                                          style: TextStyle(
-                                              color:
-                                              Palette.primaryColor.shade900),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
+                            );
+                          });
+                    } else {
+                      return const Center(
+                        child: Text("Data not found"),
                       );
-                    });
-              } else {
-                return const Center(
-                  child: Text("Data not found"),
-                );
-              }
-            },
-            future: Services.getActivePayment(),
+                    }
+                  },
+                  future: Services.getActivePayment(),
+                ),
+              ],
+            ),
           ),
         ],
       ),

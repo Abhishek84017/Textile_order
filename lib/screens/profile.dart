@@ -22,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Container(
                 height: MediaQuery.of(context).size.height * 0.2,
-                color: Color(0xff312783),
+                color: const Color(0xff312783),
               ),
               Positioned(
                 right: MediaQuery.of(context).size.width * 0.4,
@@ -35,7 +35,7 @@ class _ProfilePageState extends State<ProfilePage> {
               )
             ],
           ),
-          SizedBox(height: 100,),
+          const SizedBox(height: 100,),
           TableCalendar(
             firstDay: DateTime.utc(2010, 10, 16),
             lastDay: DateTime.utc(2030, 3, 14),

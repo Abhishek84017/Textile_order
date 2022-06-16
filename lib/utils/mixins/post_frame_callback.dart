@@ -7,7 +7,7 @@ mixin PostFrameCallBack<T extends StatefulWidget> on State<T> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback(postFrameCallback);
+    WidgetsBinding.instance.addPostFrameCallback(postFrameCallback);
   }
 
   /// Post frame callback method

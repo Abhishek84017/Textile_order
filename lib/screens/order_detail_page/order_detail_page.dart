@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:textile/constants/app_assets.dart';
 import 'package:textile/models/models.dart';
 import 'package:textile/screens/order_detail_page/widgets/order_row_status_dialog.dart';
 import 'package:textile/screens/widgets/circular_progress_indicator.dart';
@@ -25,7 +24,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Order Details'),
+        title: const Text('Order Details'),
       ),
       drawer: const DrawerWidget(),
       body: Stack(
@@ -94,7 +93,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Order Number',style: TextStyle(fontWeight: FontWeight.bold),),
-                    Text('${order?.orderNumber}',style: TextStyle(fontWeight: FontWeight.bold),),
+                    Text('${order?.orderNumber}',style: const TextStyle(fontWeight: FontWeight.bold),),
                   ],
                 ),
                 SizedBox(
@@ -104,7 +103,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Customer Name',style: TextStyle(fontWeight: FontWeight.bold),),
-                    Text('${order?.customerName}',style: TextStyle(fontWeight: FontWeight.bold),)
+                    Text('${order?.customerName}',style: const TextStyle(fontWeight: FontWeight.bold),)
                   ],
                 ),
                 SizedBox(
@@ -114,7 +113,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Order Status',style: TextStyle(fontWeight: FontWeight.bold),),
-                    Text('${order?.status}',style: TextStyle(fontWeight: FontWeight.bold),)
+                    Text('${order?.status}',style: const TextStyle(fontWeight: FontWeight.bold),)
                   ],
                 ),
                 SizedBox(
@@ -126,7 +125,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     const Text('Order Date',style: TextStyle(fontWeight: FontWeight.bold),),
                     Text(DateFormat("dd-MM-yyyy hh:mm a").format(
                         DateTime.tryParse("${order?.orderDate}") ??
-                            DateTime.now()),style: TextStyle(fontWeight: FontWeight.bold),),
+                            DateTime.now()),style: const TextStyle(fontWeight: FontWeight.bold),),
                   ],
                 ),
                 SizedBox(
@@ -167,14 +166,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               padding: const EdgeInsets.all(5.0),
                               child: Text(
                                 "Warp Color - \n" + row.warpColorCode!,
-                                textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: Text(
                                 "Pick On Loom - " + orderDesign.pickOnLoom!,
-                                textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                           ]),
@@ -184,7 +183,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               child: Text(
                                 "Average Pick - " +
                                     orderDesign.noOfFeeder.toString(),
-                                textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                             Padding(
@@ -192,7 +191,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               child: Text(
                                 "No Of Feeder - " +
                                     orderDesign.noOfFeeder.toString(),
-                                textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                           ]),
@@ -201,14 +200,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               padding: const EdgeInsets.all(5.0),
                               child: Text(
                                 "Remarks - " + (row.remark ?? ''),
-                                textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: Text(
                                 "particular - " + (row.particular ?? ''),
-                                textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                           ]),
@@ -217,14 +216,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                               padding: const EdgeInsets.all(5.0),
                               child: Text(
                                 "Rate - " + (row.rate ?? ''),
-                                textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(5.0),
                               child: Text(
                                 "particular - " + row.qty.toString(),
-                                textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,style: const TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
                           ]),
