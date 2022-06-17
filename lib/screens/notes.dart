@@ -60,7 +60,7 @@ class _NotesPageState extends State<NotesPage> {
         if (snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Home'),
+              title: const Text('Notes'),
             ),
             drawer: const DrawerWidget(),
             body: GridView.builder(

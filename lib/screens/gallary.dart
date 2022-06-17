@@ -59,7 +59,7 @@ class _GalleryPageState extends State<GalleryPage> {
         if (snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Home'),
+              title: const Text('Gallery'),
             ),
             drawer: const DrawerWidget(),
             body: GridView.builder(

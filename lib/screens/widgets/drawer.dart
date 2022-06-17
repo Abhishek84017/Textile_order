@@ -144,8 +144,9 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             title: Text("Notes",
                 style: TextStyle(color: Palette.blackColor.shade500)),
             onTap: () {
-              Navigator.push(context,
-                  CupertinoPageRoute(builder: (context) => const NotesPage()));
+              Navigator.pop(context,true);
+
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => const NotesPage()));
             },
           ),
           const Divider(thickness: 1.0,),

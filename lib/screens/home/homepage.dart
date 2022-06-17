@@ -1,14 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:textile/models/home_page_model.dart';
-
+import 'package:textile/screens/home/Orders.dart';
+import 'package:textile/screens/notes.dart';
+import 'package:textile/screens/payment_detail_page/total_payment_detail_page.dart';
+import 'package:textile/screens/widgets/webview.dart';
 import '../../config/router/router.dart';
 import '../../utils/helpers/utils.dart';
+import '../gallary.dart';
 import '../widgets/drawer.dart';
 import 'package:http/http.dart' as http;
 
@@ -62,14 +65,14 @@ class _HomePageState extends State<HomePage> {
         if (jsonData['data'] != null) {
           jsonData['data'].forEach((v) {
             _CardData.add(HomePageModel.fromJson(v));
-            print(_CardData.length);
+
           });
         }
       }
     } on SocketException catch (error) {
       Fluttertoast.showToast(msg: 'No Internet Connection');
     } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
+        print(e.toString());
     }
     return _CardData;
   }
@@ -105,7 +108,34 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(10.w)),
                         child: InkWell(
                           borderRadius: BorderRadius.circular(10.w),
-                          onTap: () {},
+                          onTap: () {
+                            if(item.type == 'web')
+                              {
+                                Navigator.push(context, CupertinoPageRoute(builder: (_) => MoreWebview(title: item.title, url: item.value!)));
+                              }
+                            else if(item.type == 'custom'){
+                              if(item.value == 'payment')
+                                {
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => const PaymentDetailPage()));
+                                }
+                              if(item.value == 'order' )
+                                {
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => const Orders()));
+                                }
+                              if(item.value == 'all_notes')
+                                {
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => const NotesPage()));
+                                }
+                              if(item.value == 'all_designs')
+                                {
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => const GalleryPage()));
+                                }
+                              if(item.value == 'changepassword')
+                              {
+                                Fluttertoast.showToast(msg: 'Update shortly');
+                              }
+                            }
+                            },
                           child: Column(
                             children: [
                               ClipRRect(
