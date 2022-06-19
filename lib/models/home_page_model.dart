@@ -10,7 +10,7 @@ class HomePageModel {
   String? inserted;
   int? insertedBy;
   String? modified;
-  String? modifiedBy;
+  int? modifiedBy;
 
   HomePageModel(
       {this.id,

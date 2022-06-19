@@ -173,12 +173,12 @@ class Services {
   }
 
 
-  static Future<Data<List<PaymentDetailModel>>> getActivePayment() async {
+  /*static Future<Data<List<PaymentDetailModel>>> getActivePayment() async {
     Uri url = _uri(Urls.baseUrl, Urls.getPartyTotalPayment);
     try {
       http.Response response = await _client.get(url, headers: _restApiHeaders);
       final jsonResponse = jsonDecode(response.body);
-      kSharedPreferences.setString('totalvalue', jsonResponse['pending']);
+
       if (response.statusCode == HttpStatus.ok) {
         final payments = <PaymentDetailModel>[];
         if (jsonResponse['data'] != null) {
@@ -194,8 +194,7 @@ class Services {
     } catch (e) {
       return const Data(message: _errorMessage);
     }
-  }
-
+  }*/
 
   static Future<Data<List<PaymentDetailByIdModel>>> getPaymentByPartyId(int? id) async {
     Uri url = _uri(Urls.baseUrl, Urls.getPartyAllPaymentById + '$id');

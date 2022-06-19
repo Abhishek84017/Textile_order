@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/src/size_extension.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:textile/constants/app_assets.dart';
 import 'package:textile/constants/app_constants.dart';
@@ -12,7 +15,6 @@ import 'package:textile/screens/widgets/circular_progress_indicator.dart';
 import 'package:textile/screens/widgets/drawer.dart';
 import 'package:textile/utils/helpers/utils.dart';
 import 'package:textile/utils/palette.dart';
-import 'package:textile/utils/services/rest_api.dart';
 import 'package:http/http.dart' as http;
 
 import 'getpayment_by_party_id.dart';
@@ -25,6 +27,30 @@ class PaymentDetailPage extends StatefulWidget {
 }
 
 class _PaymentDetailPageState extends State<PaymentDetailPage> {
+  final _controller = StreamController<String>();
+
+  List<PaymentDetailModel> payment = <PaymentDetailModel>[];
+
+  Future<List<PaymentDetailModel>> getActivePayment() async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          "https://www.textileutsav.com/machine/api/get-party-payment"));
+      final jsonResponse = jsonDecode(response.body);
+      _controller.sink.add(jsonResponse['pending']);
+      if (response.statusCode == 200) {
+        if (jsonResponse['data'] != null) {
+          for (final json in jsonResponse['data']) {
+            payment.add(PaymentDetailModel.fromJson(json));
+          }
+        }
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(msg: 'No Internet Connection');
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Something Went Wrong');
+    }
+    return payment;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,28 +77,41 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
           SingleChildScrollView(
             child: Column(
               children: [
-                Text('Total Outstanding: ${kSharedPreferences.getString('totalvalue').toString()}',style: const TextStyle(fontSize:18,color: Colors.red),),
-                FutureBuilder<Data<List<PaymentDetailModel>>>(
+                StreamBuilder<String>(
+                    initialData: 'waiting',
+                    stream: _controller.stream,
+                    builder: (context, snapshot) {
+                      return Text(
+                        'total Out Standing : ${snapshot.requireData}',
+                        style: const TextStyle(color: Colors.red, fontSize: 18),
+                      );
+                    }),
+                FutureBuilder<List<PaymentDetailModel>>(
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const AppProgressIndicator(
                           color: Palette.primaryColor);
                     }
-                    if (snapshot.hasData &&
-                        snapshot.data!.statusCode == 200 &&
-                        snapshot.data!.data!.isNotEmpty) {
+                    if (snapshot.hasData) {
                       return ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: snapshot.data!.data!.length,
+                          itemCount: payment.length,
                           itemBuilder: (context, index) {
-                            final order = snapshot.data!.data![index];
+                            final order = payment[index];
                             return Padding(
                               padding: EdgeInsets.all(20.w),
                               child: GestureDetector(
-                                onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (_) => PaymentDetailPageById(id: order.id,partyName: order.name,))),
+                                onTap: () => Navigator.push(
+                                    context,
+                                    CupertinoPageRoute(
+                                        builder: (_) => PaymentDetailPageById(
+                                              id: order.id,
+                                              partyName: order.name,
+                                            ))),
                                 child: Card(
-                                  margin: EdgeInsets.symmetric(horizontal: 10.w),
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 10.w),
                                   elevation: 10,
                                   shadowColor: Palette.primaryColor.shade50,
                                   shape: RoundedRectangleBorder(
@@ -116,7 +155,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                                         ),
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             const Text('received'),
                                             Text('${order.received}')
@@ -130,7 +169,8 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             const Text('Last Update Date'),
-                                            Text(DateFormat("dd-MM-yyyy hh:mm a")
+                                            Text(DateFormat(
+                                                    "dd-MM-yyyy hh:mm a")
                                                 .format(DateTime.tryParse(
                                                         "${order.modified}") ??
                                                     DateTime.now())),
@@ -145,36 +185,53 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                                               onTap: () async {
                                                 await showCupertinoDialog(
                                                     context: context,
-                                                    builder: (context) => AlertDialog(
-                                                      title: const Text('Going To Pick The Payment'),
-                                                      actions: [
-                                                        TextButton(
-                                                          child:
-                                                          const Text('Yes'),
-                                                          onPressed: (){
-                                                            _paymentPick(order);
-                                                            Navigator.pop(context,true);
-                                                            setState(() {});
-                                                          },
-                                                        ),
-                                                        TextButton(
-                                                          child: const Text('No'),
-                                                          onPressed: () =>
-                                                              Navigator.pop(
-                                                                  context, false),
-                                                        ),
-                                                      ],
-                                                    ));
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                          title: const Text(
+                                                              'Going To Pick The Payment'),
+                                                          actions: [
+                                                            TextButton(
+                                                              child: const Text(
+                                                                  'Yes'),
+                                                              onPressed: () {
+                                                                _paymentPick(
+                                                                    order);
+                                                                Navigator.pop(
+                                                                    context,
+                                                                    true);
+                                                                setState(() {});
+                                                              },
+                                                            ),
+                                                            TextButton(
+                                                              child: const Text(
+                                                                  'No'),
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      context,
+                                                                      false),
+                                                            ),
+                                                          ],
+                                                        ));
                                               },
-                                              child: order.assigned == 'y' ? GestureDetector(onTap: (){Utils.showToast('Payment is assigned to someone please choose another payment');},child:  Text('Going To Pick',
-                                                  style: TextStyle(
-                                                      color:
-                                                      Palette.primaryColor.shade900))) : Text(
-                                                'Going To Pick',
-                                                style: TextStyle(
-                                                    color:
-                                                    Palette.primaryColor.shade900),
-                                              ),
+                                              child: order.assigned == 'y'
+                                                  ? GestureDetector(
+                                                      onTap: () {
+                                                        Utils.showToast(
+                                                            'Payment is assigned to someone please choose another payment');
+                                                      },
+                                                      child: Text(
+                                                          'Going To Pick',
+                                                          style: TextStyle(
+                                                              color: Palette
+                                                                  .primaryColor
+                                                                  .shade900)))
+                                                  : Text(
+                                                      'Going To Pick',
+                                                      style: TextStyle(
+                                                          color: Palette
+                                                              .primaryColor
+                                                              .shade900),
+                                                    ),
                                             ),
                                           ],
                                         ),
@@ -191,7 +248,7 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
                       );
                     }
                   },
-                  future: Services.getActivePayment(),
+                  future: getActivePayment(),
                 ),
               ],
             ),
@@ -201,26 +258,22 @@ class _PaymentDetailPageState extends State<PaymentDetailPage> {
     );
   }
 
-  void _paymentPick(PaymentDetailModel order) async{
-    var data = <String,dynamic>
-    {
-      "party_id" : order.id.toString(),
-      "user_id" : kUserdata?.id.toString(),
+  void _paymentPick(PaymentDetailModel order) async {
+    var data = <String, dynamic>{
+      "party_id": order.id.toString(),
+      "user_id": kUserdata?.id.toString(),
     };
-    final response = await http.post(Uri.https('textileutsav.com', 'machine/api/mark-payment-going-to-pick'),body:data);
+    final response = await http.post(
+        Uri.https('textileutsav.com', 'machine/api/mark-payment-going-to-pick'),
+        body: data);
 
-    try{
-      if(response.statusCode == 200){
+    try {
+      if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         Utils.showToast(jsonData['message']);
       }
-    }catch(_){
+    } catch (_) {
       Utils.showToast('Something Went Wrong');
     }
   }
-
 }
-
-
-
-

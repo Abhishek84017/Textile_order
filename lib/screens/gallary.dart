@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:textile/screens/imageview.dart';
 import 'package:textile/screens/widgets/circular_progress_indicator.dart';
 import 'package:textile/screens/widgets/drawer.dart';
 import 'package:http/http.dart' as http;
@@ -24,11 +25,7 @@ class GalleryPage extends StatefulWidget {
 
 class _GalleryPageState extends State<GalleryPage> {
 
-
-
   final List<GalleryModel> GalleryData = <GalleryModel>[];
-
-
 
   Future<List<GalleryModel>> _fetchGalleryPageData() async {
     GalleryData.clear();
@@ -81,7 +78,9 @@ class _GalleryPageState extends State<GalleryPage> {
                           borderRadius: BorderRadius.circular(10.w)),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(10.w),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => ImageViewer(image: '${item.image}')));
+                        },
                         child: Column(
                           children: [
                             Expanded(
