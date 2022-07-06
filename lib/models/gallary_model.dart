@@ -1,6 +1,6 @@
 
 class GalleryModel {
-  String? code;
+  int? code;
   String? image;
 
   GalleryModel({this.code, this.image});

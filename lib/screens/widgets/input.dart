@@ -9,19 +9,23 @@ class Input extends StatelessWidget {
     this.controller,
     this.obscureText = false,
     this.readOnly = false,
-    this.keyBoardType
+    this.keyBoardType,
+    this.onChange
   }) : super(key: key);
   final String? hintText;
   final TextEditingController? controller;
   final bool obscureText;
   final bool readOnly;
   final TextInputType? keyBoardType;
+  final ValueChanged<String>? onChange;
+
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       child: TextFormField(
+        onChanged:  onChange,
         keyboardType: keyBoardType,
         controller: controller,
         style: TextStyle(

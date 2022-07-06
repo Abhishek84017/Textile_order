@@ -18,25 +18,26 @@ import 'package:http/http.dart' as http;
 import '../../models/PaymentDetailByIdModel.dart';
 
 class PaymentDetailPageById extends StatefulWidget {
+  final int? id;
+  final String? partyName;
 
-   final int? id;
-   final String? partyName;
-   const PaymentDetailPageById({Key? key,this.id,this.partyName}) : super(key: key);
+  const PaymentDetailPageById({Key? key, this.id, this.partyName})
+      : super(key: key);
 
   @override
   State<PaymentDetailPageById> createState() => _PaymentDetailPageByIdState();
 }
 
 class _PaymentDetailPageByIdState extends State<PaymentDetailPageById> {
-
   final TextEditingController _rupees = TextEditingController();
   final TextEditingController _remark = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    print('hello');
     return Scaffold(
       appBar: AppBar(
-        title:  Text(widget.partyName ?? ''),
+        title: Text(widget.partyName ?? ''),
         elevation: 0,
         centerTitle: true,
         actions: [
@@ -57,8 +58,7 @@ class _PaymentDetailPageByIdState extends State<PaymentDetailPageById> {
           FutureBuilder<Data<List<PaymentDetailByIdModel>>>(
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const AppProgressIndicator(
-                    color: Palette.primaryColor);
+                return const AppProgressIndicator(color: Palette.primaryColor);
               }
               if (snapshot.hasData &&
                   snapshot.data!.statusCode == 200 &&
@@ -83,7 +83,7 @@ class _PaymentDetailPageByIdState extends State<PaymentDetailPageById> {
                                 children: [
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       const Text('Bill Amount'),
                                       Text('${order.billAmount}'),
@@ -94,10 +94,10 @@ class _PaymentDetailPageByIdState extends State<PaymentDetailPageById> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      const Text('Pending Amount'),
-                                      Text('${order.pending}')
+                                      const Text('Pending Amount',style: TextStyle(color: Colors.red),),
+                                      Text('${order.pending}',style: TextStyle(color: Colors.red))
                                     ],
                                   ),
                                   SizedBox(
@@ -105,7 +105,7 @@ class _PaymentDetailPageByIdState extends State<PaymentDetailPageById> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       const Text('received'),
                                       Text('${order.received}')
@@ -116,13 +116,13 @@ class _PaymentDetailPageByIdState extends State<PaymentDetailPageById> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       const Text('Last Update Date'),
                                       Text(DateFormat("dd-MM-yyyy hh:mm a")
                                           .format(DateTime.tryParse(
-                                          "${order.modified}") ??
-                                          DateTime.now())),
+                                                  "${order.modified}") ??
+                                              DateTime.now())),
                                     ],
                                   ),
                                   SizedBox(
@@ -130,56 +130,71 @@ class _PaymentDetailPageByIdState extends State<PaymentDetailPageById> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       GestureDetector(
                                         onTap: () async {
                                           await showCupertinoDialog(
                                               context: context,
                                               builder: (context) => AlertDialog(
-                                                contentPadding: EdgeInsets.zero,
-                                                content: Column(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children:  [
-                                                    Input(hintText:'Enter Rupees',controller: _rupees,keyBoardType: TextInputType.number,),
-                                                    Input(hintText: 'Remark',controller: _remark,),
-                                                  ],
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    child:
-                                                    const Text('Save'),
-                                                    onPressed: (){
-                                                      if(_rupees.text.isEmpty)
-                                                      {
-                                                        Utils.showToast('Enter Rupees');
-                                                        return;
-                                                      }
-                                                      if(_remark.text.isEmpty)
-                                                      {
-                                                        Utils.showToast('Enter Rupees');
-                                                        return;
-                                                      }
-                                                      _makeAsPaid(order);
-                                                      Navigator.pop(context,true);
-                                                      _rupees.clear();
-                                                      _remark.clear();
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    child: const Text('No'),
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            context, false),
-                                                  ),
-                                                ],
-                                              ));
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    content: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        Input(
+                                                          hintText:
+                                                              'Enter Rupees',
+                                                          controller: _rupees,
+                                                          keyBoardType:
+                                                              TextInputType
+                                                                  .number,
+                                                        ),
+                                                        Input(
+                                                          hintText: 'Remark',
+                                                          controller: _remark,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        child:
+                                                            const Text('Save'),
+                                                        onPressed: () {
+                                                          if (_rupees
+                                                              .text.isEmpty) {
+                                                            Utils.showToast(
+                                                                'Enter Rupees');
+                                                            return;
+                                                          }
+                                                          if (_remark
+                                                              .text.isEmpty) {
+                                                            Utils.showToast(
+                                                                'Enter Rupees');
+                                                            return;
+                                                          }
+                                                          _makeAsPaid(order);
+                                                          Navigator.pop(
+                                                              context, true);
+                                                          _rupees.clear();
+                                                          _remark.clear();
+                                                        },
+                                                      ),
+                                                      TextButton(
+                                                        child: const Text('No'),
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context, false),
+                                                      ),
+                                                    ],
+                                                  ));
                                         },
                                         child: Text(
                                           'Make a Payment',
                                           style: TextStyle(
-                                              color:
-                                              Palette.primaryColor.shade900),
+                                              color: Palette
+                                                  .primaryColor.shade900),
                                         ),
                                       ),
                                       GestureDetector(
@@ -187,31 +202,31 @@ class _PaymentDetailPageByIdState extends State<PaymentDetailPageById> {
                                           await showCupertinoDialog(
                                               context: context,
                                               builder: (context) => AlertDialog(
-                                                title: const Text('Are You Sure'),
-                                                actions: [
-                                                  TextButton(
-                                                    child:
-                                                    const Text('Yes'),
-                                                    onPressed: (){
-                                                      _closed(order);
-                                                      Navigator.pop(context,true);
-                                                      setState(() {});
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    child: const Text('No'),
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            context, false),
-                                                  ),
-                                                ],
-                                              ));
+                                                    title: const Text(
+                                                        'Are You Sure'),
+                                                    actions: [
+                                                      TextButton(
+                                                        child:
+                                                            const Text('Yes'),
+                                                        onPressed: () {
+                                                          _closed(order);
+                                                          Navigator.pop(
+                                                              context, true);
+                                                          setState(() {});
+                                                        },
+                                                      ),
+                                                      TextButton(
+                                                        child: const Text('No'),
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context, false),
+                                                      ),
+                                                    ],
+                                                  ));
                                         },
-                                         child: const Text(
+                                        child: const Text(
                                           'Mark As Inactive',
-                                          style: TextStyle(
-                                              color:
-                                              Colors.red),
+                                          style: TextStyle(color: Colors.red),
                                         ),
                                       ),
                                     ],
@@ -237,45 +252,42 @@ class _PaymentDetailPageByIdState extends State<PaymentDetailPageById> {
   }
 
   void _makeAsPaid(PaymentDetailByIdModel order) async {
-    var data = <String,dynamic>
-    {
-      "payment_id" : order.id.toString(),
-      "user_id" : kUserdata?.id.toString(),
-      "amount" : _rupees.text,
-      "remark" : _remark.text
+    print(kUserdata?.id.toString());
+    var data = <String, dynamic>{
+      "payment_id": order.id.toString(),
+      "user_id": kUserdata?.id.toString(),
+      "amount": _rupees.text,
+      "remark": _remark.text
     };
-    final response = await http.post(Uri.https('textileutsav.com', 'machine/api/make-a-payment'),body:data);
-    try{
-      if(response.statusCode == 200){
-        print(response.body);
+    print(data);
+    final response = await http.post(
+        Uri.https('textileutsav.com', 'machine/api/make-a-payment'),
+        body: data);
+    try {
+      if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         Utils.showToast(jsonData['message']);
-        setState(() {
-
-        });
+        setState(() {});
+      } else {
+        setState(() {});
       }
-    }catch(_){
+    } catch (_) {
       Utils.showToast('Something Went Wrong');
     }
   }
 
   void _closed(PaymentDetailByIdModel order) async {
-    final response = await http.get(Uri.https('textileutsav.com', 'machine/api/mark-as-closed/${order.id}'));
+    final response = await http.get(Uri.https(
+        'textileutsav.com', 'machine/api/mark-as-closed/${order.id}'));
     print(response.request);
-    try{
-      if(response.statusCode == 200){
+    try {
+      if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         Utils.showToast(jsonData['message']);
-        setState(() {
-        });
+        setState(() {});
       }
-    }catch(_){
+    } catch (_) {
       Utils.showToast('Something Went Wrong');
     }
   }
-
 }
-
-
-
-

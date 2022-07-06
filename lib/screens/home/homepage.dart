@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:textile/models/home_page_model.dart';
+import 'package:textile/screens/Gallary/gallary_category.dart';
 import 'package:textile/screens/home/Orders.dart';
 import 'package:textile/screens/notes.dart';
+import 'package:textile/screens/payment_detail_page/All_firms.dart';
 import 'package:textile/screens/payment_detail_page/total_payment_detail_page.dart';
 import 'package:textile/screens/widgets/webview.dart';
-import '../../config/router/router.dart';
-import '../../utils/helpers/utils.dart';
-import '../gallary.dart';
+import '../widgets/circular_progress_indicator.dart';
 import '../widgets/drawer.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,7 +25,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  DateTime? _currentBackPressTime;
+
 
 
 
@@ -56,20 +56,19 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<List<HomePageModel>> _fetchHomePageData() async {
+    final response = await http.get(Uri.parse("https://www.textileutsav.com/machine/api/get-home-cards"));
     _CardData.clear();
-    final response = await http.get(
-        Uri.parse("https://www.textileutsav.com/machine/api/get-home-cards"));
+    print(_CardData.length);
     try {
       if (response.statusCode == 200) {
         final jsonData = jsonDecode(response.body);
         if (jsonData['data'] != null) {
           jsonData['data'].forEach((v) {
             _CardData.add(HomePageModel.fromJson(v));
-
           });
         }
       }
-    } on SocketException catch (error) {
+    } on SocketException {
       Fluttertoast.showToast(msg: 'No Internet Connection');
     } catch (e) {
         print(e.toString());
@@ -116,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                             else if(item.type == 'custom'){
                               if(item.value == 'payment')
                                 {
-                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => const PaymentDetailPage()));
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => const AllFirms()));
                                 }
                               if(item.value == 'order' )
                                 {
@@ -128,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                                 }
                               if(item.value == 'all_designs')
                                 {
-                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => const GalleryPage()));
+                                  Navigator.push(context, CupertinoPageRoute(builder: (context) => const GalleryCategoryPage()));
                                 }
                               if(item.value == 'changepassword')
                               {
@@ -155,7 +154,7 @@ class _HomePageState extends State<HomePage> {
           );
         } else {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: AppProgressIndicator(color: Colors.red,),
           );
         }
       },
@@ -163,8 +162,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<bool> _onWillPop() async {
-    DateTime now = DateTime.now();
+  /*Future<bool> _onWillPop() async {
+    DateTime now = DateTime.now();hh
     if (_currentBackPressTime == null ||
         now.difference(_currentBackPressTime!) > const Duration(seconds: 2)) {
       _currentBackPressTime = now;
@@ -173,5 +172,5 @@ class _HomePageState extends State<HomePage> {
     }
     Navigate.close();
     return Future.value(false);
-  }
+  }*/
 }

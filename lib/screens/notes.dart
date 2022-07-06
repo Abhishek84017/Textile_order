@@ -5,13 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:textile/models/home_page_model.dart';
 import 'package:textile/models/notes_model.dart';
 import 'package:textile/screens/widgets/drawer.dart';
 
 import '../../config/router/router.dart';
 import '../../utils/helpers/utils.dart';
 import 'package:http/http.dart' as http;
+
+import 'imageview.dart';
 
 
 class NotesPage extends StatefulWidget {
@@ -28,9 +29,6 @@ class _NotesPageState extends State<NotesPage> {
 
 
   final List<NotesModel> _CardData = <NotesModel>[];
-
-
-
   Future<List<NotesModel>> _fetchNotesPageData() async {
     _CardData.clear();
     final response = await http.get(
@@ -45,13 +43,14 @@ class _NotesPageState extends State<NotesPage> {
           });
         }
       }
-    } on SocketException catch (error) {
+    } on SocketException {
       Fluttertoast.showToast(msg: 'No Internet Connection');
     } catch (e) {
       Fluttertoast.showToast(msg: e.toString());
     }
     return _CardData;
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +81,9 @@ class _NotesPageState extends State<NotesPage> {
                           borderRadius: BorderRadius.circular(10.w)),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(10.w),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => ImageViewer(image: '${item.image}')));
+                        },
                         child: Column(
                           children: [
                             ClipRRect(

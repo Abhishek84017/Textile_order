@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:textile/constants/api_path.dart';
 import 'package:textile/constants/app_constants.dart';
 import 'package:textile/models/models.dart';
@@ -8,9 +9,12 @@ import 'package:http/http.dart' as http;
 import 'package:textile/models/payment_detail_model.dart';
 
 import '../../models/PaymentDetailByIdModel.dart';
+import '../../models/all_firm_model.dart';
+import '../../models/gallery_category_model.dart';
+import '../../models/home_page_model.dart';
 
 class Services {
-  Services._();
+
 
   /// error message if there is any unhandled or unexpected
   /// error while requesting for any of api
@@ -18,7 +22,8 @@ class Services {
   static const String _noInternetConnection = 'No internet connection';
 
 
-
+  List<GalleryCategoryModel>  _galleryCategory = <GalleryCategoryModel>[];
+  List<AllFirmsModel>  _allFirms = <AllFirmsModel>[];
 
   // static Map<String, String> restApiHeaders = <String, String>{
   //   'Content-Type': 'application/json',
@@ -104,8 +109,7 @@ class Services {
   static Future<Data> changeOrderStatus(Map<String, dynamic> body) async {
     Uri url = _uri(Urls.baseUrl, Urls.changeOrderStatus);
     try {
-      http.Response response = await _client.post(url,
-          headers: _restApiHeaders, body: jsonEncode(body));
+      http.Response response = await _client.post(url, headers: _restApiHeaders, body: jsonEncode(body));
       final jsonResponse = jsonDecode(response.body);
       if (response.statusCode == HttpStatus.ok) {
         return Data.fromJson(jsonResponse);
@@ -217,6 +221,47 @@ class Services {
       return const Data(message: _errorMessage);
     }
   }
+
+  Future<List<GalleryCategoryModel>> fetchGalleryPageData() async {
+    final response = await http.get(Uri.parse(Urls.galleryCategory));
+    try {
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        if (jsonData['data'] != null) {
+          jsonData['data'].forEach((v) {
+            _galleryCategory.add(GalleryCategoryModel.fromJson(v));
+
+          });
+        }
+      }
+    } on SocketException catch (error) {
+      Fluttertoast.showToast(msg: 'No Internet Connection');
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+    return _galleryCategory;
+  }
+
+
+  Future<List<AllFirmsModel>> fetchAllFirms() async {
+    final response = await http.get(Uri.parse(Urls.allFirms));
+    try {
+      if (response.statusCode == 200) {
+        final jsonData = jsonDecode(response.body);
+        if (jsonData['data'] != null) {
+          jsonData['data'].forEach((v) {
+            _allFirms.add(AllFirmsModel.fromJson(v));
+          });
+        }
+      }
+    } on SocketException catch (error) {
+      Fluttertoast.showToast(msg: 'No Internet Connection');
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+    return _allFirms;
+  }
+
 }
 
 

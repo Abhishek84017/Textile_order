@@ -16,16 +16,13 @@ class _ImageViewerState extends State<ImageViewer> {
     return Scaffold(
       body: Center(
         child: InteractiveViewer(
-          child: SizedBox(
-              child: CachedNetworkImage(
-                fadeInDuration: const Duration(seconds: 1),
-                width: double.infinity,
-                fit: BoxFit.fitWidth,
-                imageUrl: 'https://www.textileutsav.com/machine/${widget.image}',
-                progressIndicatorBuilder: (context, url, downloadProgress) => const AppProgressIndicator(),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-              )
-
+          child: CachedNetworkImage(
+            fadeInDuration: const Duration(seconds: 1),
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
+            imageUrl: 'https://www.textileutsav.com/machine/${widget.image}',
+            progressIndicatorBuilder: (context, url, downloadProgress) => const AppProgressIndicator(color: Colors.red,),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
           ),
         ),
       ),

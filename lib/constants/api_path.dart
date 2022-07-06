@@ -31,6 +31,9 @@ class Urls {
   static const String changeOrderStatus = '/machine/api/change-order-status';
 
   //
-  static const String changeOrderRowStatus =
-      '/machine/api/change-order-row-status';
+  static const String changeOrderRowStatus = '/machine/api/change-order-row-status';
+
+  static const String galleryCategory = 'https://www.textileutsav.com/machine/api/get-gallery-category';
+
+  static const String allFirms = 'http://www.textileutsav.com/machine/api/get-all-firm';
 }

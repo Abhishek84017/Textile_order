@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:textile/models/models.dart';
-import 'package:textile/screens/order_detail_page/widgets/order_row_status_dialog.dart';
+import 'package:textile/screens/widgets/order_row_status_dialog.dart';
 import 'package:textile/screens/widgets/circular_progress_indicator.dart';
 import 'package:textile/screens/widgets/gap.dart';
 import 'package:textile/utils/services/rest_api.dart';
@@ -113,7 +113,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Order Status',style: TextStyle(fontWeight: FontWeight.bold),),
-                    Text('${order?.status}',style: const TextStyle(fontWeight: FontWeight.bold),)
+                    Text('${order?.status}',style:  TextStyle(fontWeight: FontWeight.bold,color: order?.status == 'pending' ? Colors.yellow : order?.status == 'running' ? Colors.orange : order?.status == 'hold' ? Colors.red : order?.status == 'completed' ? Colors.green : Colors.blue,),)
                   ],
                 ),
                 SizedBox(
@@ -123,9 +123,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Order Date',style: TextStyle(fontWeight: FontWeight.bold),),
-                    Text(DateFormat("dd-MM-yyyy hh:mm a").format(
-                        DateTime.tryParse("${order?.orderDate}") ??
-                            DateTime.now()),style: const TextStyle(fontWeight: FontWeight.bold),),
+                    Text(DateFormat("dd-MM-yyyy hh:mm a").format(DateTime.tryParse("${order?.orderDate}") ?? DateTime.now()),style: const TextStyle(fontWeight: FontWeight.bold),),
                   ],
                 ),
                 SizedBox(

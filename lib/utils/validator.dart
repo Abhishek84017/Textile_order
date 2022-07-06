@@ -22,8 +22,7 @@ class Validator {
   static const String pinCodePattern = r"^[0-9]{6}$";
 
   // gst pattern for regExp
-  static const String gstPattern =
-      r"^[0-3]{1}[0-8]{1}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$";
+  static const String gstPattern = r"^[0-3]{1}[0-8]{1}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$";
 
   // aadhaar pattern for regExp
   static const String aadhaarPattern = r"^[0-9]{12}$";

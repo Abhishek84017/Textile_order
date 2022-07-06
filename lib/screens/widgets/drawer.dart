@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/src/size_extension.dart';
 import 'package:textile/config/router/router.dart';
 import 'package:textile/constants/app_constants.dart';
+import 'package:textile/screens/Gallary/gallary_category.dart';
 import 'package:textile/screens/auth/sign_in.dart';
-import 'package:textile/screens/gallary.dart';
 import 'package:textile/screens/home/Orders.dart';
 import 'package:textile/screens/home/homepage.dart';
 import 'package:textile/screens/notes.dart';
@@ -18,6 +18,7 @@ import 'package:textile/utils/helpers/utils.dart';
 import 'package:textile/utils/palette.dart';
 
 import '../../models/mobile_menu_model.dart';
+import '../payment_detail_page/All_firms.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({Key? key}) : super(key: key);
@@ -124,7 +125,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 style: TextStyle(color: Palette.blackColor.shade500)),
             onTap: () {
               Navigator.pop(context, true);
-              Navigate.to(const PaymentDetailPage());
+              Navigate.to(const AllFirms());
             },
           ),
           const Divider(thickness: 1.0,),
@@ -134,7 +135,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                 style: TextStyle(color: Palette.blackColor.shade500)),
             onTap: () {
               Navigator.pop(context,true);
-              Navigator.push(context, CupertinoPageRoute(builder: (context) => const GalleryPage()));
+              Navigator.push(context, CupertinoPageRoute(builder: (context) => const GalleryCategoryPage()));
 
             },
           ),

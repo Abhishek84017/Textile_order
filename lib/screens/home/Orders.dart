@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:textile/config/router/router.dart';
-import 'package:textile/models/mobile_menu_model.dart';
 import 'package:textile/models/models.dart';
-import 'package:textile/screens/home/widgets/order_status_dialog.dart';
+import 'package:textile/screens/widgets/order_status_dialog.dart';
 import 'package:textile/screens/order_detail_page/order_detail_page.dart';
 import 'package:textile/screens/widgets/circular_progress_indicator.dart';
 import 'package:textile/screens/widgets/drawer.dart';
@@ -26,7 +25,7 @@ class Orders extends StatefulWidget {
 
 class _OrdersState extends State<Orders> {
 
-  final List<MenusModel> _menu = <MenusModel>[];
+
 
   @override
   void initState() {
@@ -110,12 +109,7 @@ class _OrdersState extends State<Orders> {
                             ),
                           ),
                         ),
-                        Text(
-                          "${order.status}".toStudlyCase(),
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            color: Palette.blackColor.shade500,
-                            fontWeight: FontWeight.bold,
+                        Text("${order.status}".toStudlyCase(), style: TextStyle(fontSize: 12.sp, color: order.status == 'pending' ? Colors.yellow : order.status == 'running' ? Colors.orange : order.status == 'hold' ? Colors.red : order.status == 'completed' ? Colors.green : Colors.blue, fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
